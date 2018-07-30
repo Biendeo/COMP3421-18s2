@@ -9,6 +9,7 @@ import com.jogamp.newt.event.MouseEvent;
 import com.jogamp.opengl.GL3;
 import unsw.graphics.Application2D;
 import unsw.graphics.geometry.Line2D;
+import unsw.graphics.geometry.LineStrip2D;
 import unsw.graphics.geometry.Point2D;
 import unsw.graphics.geometry.Polygon2D;
 
@@ -25,7 +26,7 @@ import java.util.List;
  */
 public class PolygonDrawing extends Application2D {
 
-    private Polygon2D currentPolygon;
+    private LineStrip2D currentPolygon;
 
     private Point2D currentPoint;
 
@@ -33,7 +34,7 @@ public class PolygonDrawing extends Application2D {
 
     public PolygonDrawing() {
         super("Line Drawing", 600, 600);
-        currentPolygon = new Polygon2D();
+        currentPolygon = new LineStrip2D();
         currentPoint = new Point2D(0,0);
         finishedPolygons = new ArrayList<>();
     }
@@ -52,8 +53,8 @@ public class PolygonDrawing extends Application2D {
                 if (ev.getButton() == MouseEvent.BUTTON1)
                     currentPolygon.add(currentPoint);
                 else if (ev.getButton() == MouseEvent.BUTTON3) {
-                    finishedPolygons.add(currentPolygon);
-                    currentPolygon = new Polygon2D();
+                    finishedPolygons.add(new Polygon2D(currentPolygon.getPoints()));
+                    currentPolygon = new LineStrip2D();
                 }
             }
             
