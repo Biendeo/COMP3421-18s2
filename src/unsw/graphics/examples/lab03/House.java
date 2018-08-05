@@ -32,6 +32,8 @@ public class House extends DraggableApplication2D {
 		housePoints.add(new Point2D(0.0f, 0.0f));
 
 		house = new LineStrip2D(housePoints);
+
+		this.disableKeyboard().enableMouse();
 	}
 
 	public static void main(String[] args) {
@@ -42,12 +44,11 @@ public class House extends DraggableApplication2D {
 	public void display(GL3 gl) {
 		super.display(gl);
 
-		// Translate to see the house.
-		Shader.setModelMatrix(gl, CoordFrame2D.identity().getMatrix());
-
 		CoordFrame2D.identity().draw(gl);
 
 		Shader.setPenColor(gl, Color.BLACK);
+
+		// Translate to see the house.
 		house.draw(gl);
 	}
 }

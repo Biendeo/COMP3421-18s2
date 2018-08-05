@@ -36,6 +36,8 @@ public class Windmill extends DraggableApplication2D {
 		vanePoints.add(new Point2D(0.0f, 0.0f));
 
 		vane = new LineStrip2D(vanePoints);
+
+		this.enableKeyboard().enableMouse();
 	}
 
 	public static void main(String[] args) {
