@@ -1,5 +1,7 @@
 package unsw.graphics.examples.lab04;
 
+import com.jogamp.newt.event.KeyAdapter;
+import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.opengl.GL3;
 import unsw.graphics.CoordFrame2D;
 import unsw.graphics.Shader;
@@ -18,6 +20,8 @@ public class SpinningShape extends DraggableApplication2D {
 	private float radius2;
 	private float radius3;
 
+	private boolean spinning;
+
 	public SpinningShape() {
 		super("Spinning Shape", 600, 600);
 		this.enableKeyboard().enableMouse();
@@ -27,12 +31,27 @@ public class SpinningShape extends DraggableApplication2D {
 		radius1 = 0.5f;
 		radius2 = 0.7f;
 		radius3 = 0.9f;
+		spinning = false;
 		setBackground(Color.BLACK);
 	}
 
 	public static void main(String[] args) {
 		SpinningShape example = new SpinningShape();
 		example.start();
+	}
+
+	@Override
+	public void init(GL3 gl) {
+		super.init(gl);
+		getWindow().addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent keyEvent) {
+				if (keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
+					spinning = !spinning;
+				}
+			}
+		});
+
 	}
 
 	@Override
@@ -44,9 +63,11 @@ public class SpinningShape extends DraggableApplication2D {
 		Shader.setPenColor(gl, Color.BLUE);
 		tri.draw(gl);
 
-		rotation1 = MathUtil.normaliseAngle(rotation1 + 1.2f);
-		rotation2 = MathUtil.normaliseAngle(rotation2 + 1.1f);
-		rotation3 = MathUtil.normaliseAngle(rotation3 + 1.0f);
+		if (spinning) {
+			rotation1 = MathUtil.normaliseAngle(rotation1 + 1.2f);
+			rotation2 = MathUtil.normaliseAngle(rotation2 + 1.1f);
+			rotation3 = MathUtil.normaliseAngle(rotation3 + 1.0f);
+		}
 
 		CoordFrame2D.identity().draw(gl);
 	}

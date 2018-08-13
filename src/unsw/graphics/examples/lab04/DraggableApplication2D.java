@@ -77,13 +77,6 @@ public class DraggableApplication2D extends Application2D {
 							cameraPosition = new Point2D(cameraPosition.getX() + 0.05f * zoom, cameraPosition.getY());
 							break;
 					}
-					if (keyEvent.getKeyCode() == KeyEvent.VK_MINUS) {
-						zoom *= 1.25f;
-					} else if (keyEvent.getKeyCode() == KeyEvent.VK_EQUALS) {
-						zoom *= 0.8f;
-					} else if (keyEvent.getKeyCode() == KeyEvent.VK_0) {
-						zoom = 1.0f;
-					}
 				}
 			}
 		});
