@@ -3,6 +3,9 @@ package unsw.graphics.examples;
 import java.awt.Color;
 import java.io.IOException;
 
+import com.jogamp.newt.event.KeyEvent;
+import com.jogamp.newt.event.KeyListener;
+import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL3;
 
 import unsw.graphics.Application3D;
@@ -28,13 +31,18 @@ import unsw.graphics.geometry.TriangleMesh;
  */
 public class ModelViewer extends Application3D {
 
-    private static final boolean USE_LIGHTING = false;
+    private static final boolean USE_LIGHTING = true;
 
     private float rotateY;
 
     private TriangleMesh model;
 
     private TriangleMesh base;
+
+    private Shader gouraudNormalShader;
+    private Shader gouraudBlinnPhongShader;
+
+    private boolean usingBlinngPhong;
 
     public ModelViewer() throws IOException {
         super("Model viewer", 600, 600);
@@ -48,10 +56,23 @@ public class ModelViewer extends Application3D {
         model.init(gl);
         base.init(gl);
         if (USE_LIGHTING) {
-            Shader shader = new Shader(gl, "shaders/vertex_gouraud.glsl",
+            gouraudBlinnPhongShader = new Shader(gl, "shaders/vertex_gouraud_blinnphong.glsl",
                     "shaders/fragment_gouraud.glsl");
-            shader.use(gl);
+            gouraudNormalShader = new Shader(gl, "shaders/vertex_gouraud.glsl",
+                    "shaders/fragment_gouraud.glsl");
         }
+        usingBlinngPhong = false;
+        getWindow().addKeyListener(new KeyListener() {
+            @Override
+            public void keyPressed(KeyEvent keyEvent) {
+                if (keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
+                    usingBlinngPhong = !usingBlinngPhong;
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent keyEvent) {}
+        });
     }
 
     @Override
@@ -68,6 +89,16 @@ public class ModelViewer extends Application3D {
 
     @Override
     public void display(GL3 gl) {
+        if (USE_LIGHTING) {
+            if (usingBlinngPhong) {
+                gouraudBlinnPhongShader.use(gl);
+                getWindow().setTitle("Model viewer: Blinn-Phong");
+            } else {
+                gouraudNormalShader.use(gl);
+                getWindow().setTitle("Model viewer: Standard");
+            }
+        }
+
         super.display(gl);
 
         // Compute the view transform
