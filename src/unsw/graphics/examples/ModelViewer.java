@@ -38,11 +38,14 @@ public class ModelViewer extends Application3D {
 
     private TriangleMesh base;
 
+    private Shader gouraudShader;
+    private Shader phongShader;
     private Shader phongFixedShader;
     private Shader halfLambertShader;
     private Shader lightAttenuationShader;
 
-    int currentShader;
+    private int currentShader;
+    private boolean rotating;
 
     public ModelViewer() throws IOException {
         super("Model viewer", 600, 600);
@@ -56,16 +59,21 @@ public class ModelViewer extends Application3D {
         model.init(gl);
         base.init(gl);
         if (USE_LIGHTING) {
+            gouraudShader = new Shader(gl, "shaders/vertex_gouraud.glsl","shaders/fragment_gouraud.glsl");
+            phongShader = new Shader(gl, "shaders/vertex_phong.glsl","shaders/fragment_phong.glsl");
             phongFixedShader = new Shader(gl, "shaders/vertex_tutorial_1.glsl","shaders/fragment_tutorial_1.glsl");
             halfLambertShader = new Shader(gl, "shaders/vertex_tutorial_2.glsl","shaders/fragment_tutorial_2.glsl");
             lightAttenuationShader = new Shader(gl, "shaders/vertex_tutorial_3.glsl","shaders/fragment_tutorial_3.glsl");
 
             currentShader = 0;
+            rotating = true;
             getWindow().addKeyListener(new KeyListener() {
                 @Override
                 public void keyPressed(KeyEvent keyEvent) {
                     if (keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
-                        currentShader = (currentShader + 1) % 3;
+                        currentShader = (currentShader + 1) % 5;
+                    } else if (keyEvent.getKeyCode() == KeyEvent.VK_R) {
+                        rotating = !rotating;
                     }
                 }
 
@@ -93,14 +101,22 @@ public class ModelViewer extends Application3D {
             switch (currentShader) {
                 case 0:
                 default:
+                    gouraudShader.use(gl);
+                    getWindow().setTitle("Model viewer: Gouraud");
+                    break;
+                case 1:
+                    phongShader.use(gl);
+                    getWindow().setTitle("Model viewer: Phong");
+                    break;
+                case 2:
                     phongFixedShader.use(gl);
                     getWindow().setTitle("Model viewer: Phong Fixed");
                     break;
-                case 1:
+                case 3:
                     halfLambertShader.use(gl);
                     getWindow().setTitle("Model viewer: Half Lambert");
                     break;
-                case 2:
+                case 4:
                     lightAttenuationShader.use(gl);
                     getWindow().setTitle("Model viewer: Light Attenuation");
                     break;
@@ -127,6 +143,9 @@ public class ModelViewer extends Application3D {
         Shader.setColor(gl, "specularCoeff", new Color(0.8f, 0.8f, 0.8f));
         Shader.setFloat(gl, "phongExp", 16f);
 
+        // This one is my doing.
+        Shader.setFloat(gl, "k", 0.1f);
+
         // The coordinate frame for both objects
         CoordFrame3D frame = CoordFrame3D.identity().translate(0, -0.5f, -2);
 
@@ -151,7 +170,9 @@ public class ModelViewer extends Application3D {
         Shader.setPenColor(gl, Color.BLUE);
         base.draw(gl, baseFrame);
 
-        rotateY += 1;
+        if (rotating) {
+            rotateY += 1;
+        }
     }
     
     @Override
