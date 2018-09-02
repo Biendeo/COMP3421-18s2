@@ -3,6 +3,8 @@ package unsw.graphics.examples;
 import java.awt.Color;
 import java.io.IOException;
 
+import com.jogamp.newt.event.KeyEvent;
+import com.jogamp.newt.event.KeyListener;
 import com.jogamp.opengl.GL3;
 
 import unsw.graphics.Application3D;
@@ -36,6 +38,12 @@ public class ModelViewer extends Application3D {
 
     private TriangleMesh base;
 
+    private Shader phongFixedShader;
+    private Shader halfLambertShader;
+    private Shader lightAttenuationShader;
+
+    int currentShader;
+
     public ModelViewer() throws IOException {
         super("Model viewer", 600, 600);
         model = new TriangleMesh("res/models/bunny.ply", true);
@@ -48,9 +56,22 @@ public class ModelViewer extends Application3D {
         model.init(gl);
         base.init(gl);
         if (USE_LIGHTING) {
-            Shader shader = new Shader(gl, "shaders/vertex_phong.glsl",
-                    "shaders/fragment_phong.glsl");
-            shader.use(gl);
+            phongFixedShader = new Shader(gl, "shaders/vertex_tutorial_1.glsl","shaders/fragment_tutorial_1.glsl");
+            halfLambertShader = new Shader(gl, "shaders/vertex_tutorial_2.glsl","shaders/fragment_tutorial_2.glsl");
+            lightAttenuationShader = new Shader(gl, "shaders/vertex_tutorial_3.glsl","shaders/fragment_tutorial_3.glsl");
+
+            currentShader = 0;
+            getWindow().addKeyListener(new KeyListener() {
+                @Override
+                public void keyPressed(KeyEvent keyEvent) {
+                    if (keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
+                        currentShader = (currentShader + 1) % 3;
+                    }
+                }
+
+                @Override
+                public void keyReleased(KeyEvent keyEvent) {}
+            });
         }
     }
 
@@ -68,6 +89,24 @@ public class ModelViewer extends Application3D {
 
     @Override
     public void display(GL3 gl) {
+        if (USE_LIGHTING) {
+            switch (currentShader) {
+                case 0:
+                default:
+                    phongFixedShader.use(gl);
+                    getWindow().setTitle("Model viewer: Phong Fixed");
+                    break;
+                case 1:
+                    halfLambertShader.use(gl);
+                    getWindow().setTitle("Model viewer: Half Lambert");
+                    break;
+                case 2:
+                    lightAttenuationShader.use(gl);
+                    getWindow().setTitle("Model viewer: Light Attenuation");
+                    break;
+            }
+        }
+
         super.display(gl);
 
         // Compute the view transform
