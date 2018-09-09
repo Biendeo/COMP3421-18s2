@@ -23,13 +23,17 @@ import unsw.graphics.Shader;
  */
 public class Triangle3D {
     private List<Point3D> points;
-    
+
     public Triangle3D(float x0, float y0, float z0, float x1, float y1, float z1, float x2, float y2, float z2) {
         List<Point3D> points = new ArrayList<Point3D>();
         points.add(new Point3D(x0, y0, z0));
         points.add(new Point3D(x1, y1, z1));
         points.add(new Point3D(x2, y2, z2));
         this.points = points;
+    }
+
+    public Triangle3D(Point3D p0, Point3D p1, Point3D p2) {
+        this(p0.getX(), p0.getY(), p0.getZ(), p1.getX(), p1.getY(), p1.getZ(), p2.getX(), p2.getY(), p2.getZ());
     }
 
     public void draw(GL3 gl, CoordFrame3D frame) {        
