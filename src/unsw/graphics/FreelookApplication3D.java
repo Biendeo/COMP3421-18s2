@@ -114,6 +114,5 @@ public class FreelookApplication3D extends Application3D {
 
 		Shader.setProjMatrix(gl, Matrix4.perspective(vFov, aspectRatio, zNear, zFar));
 		Shader.setViewMatrix(gl, CoordFrame3D.identity().rotateX(-cameraTilt).rotateY(-cameraYaw).translate(-cameraPosition.getX(), -cameraPosition.getY(), -cameraPosition.getZ()).getMatrix());
-		System.out.println(String.format("(%f, %f, %f) - (%f, %f)", cameraPosition.getX(), cameraPosition.getY(), cameraPosition.getZ(), cameraTilt, cameraYaw));
 	}
 }
