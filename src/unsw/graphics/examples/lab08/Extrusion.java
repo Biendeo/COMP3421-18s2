@@ -108,10 +108,10 @@ public class Extrusion extends FreelookApplication3D {
 				Triangle3D top = new Triangle3D(p1n1.asPoint3D(), p2n1.asPoint3D(), p3n1.asPoint3D());
 				Triangle3D side11 = new Triangle3D(p2n1.asPoint3D(), p1n1.asPoint3D(), p1n2.asPoint3D());
 				Triangle3D side12 = new Triangle3D(p2n1.asPoint3D(), p1n2.asPoint3D(), p2n2.asPoint3D());
-				Triangle3D side21 = new Triangle3D(p2n1.asPoint3D(), p1n1.asPoint3D(), p1n2.asPoint3D());
-				Triangle3D side22 = new Triangle3D(p2n1.asPoint3D(), p1n2.asPoint3D(), p2n2.asPoint3D());
-				Triangle3D side31 = new Triangle3D(p2n1.asPoint3D(), p1n1.asPoint3D(), p1n2.asPoint3D());
-				Triangle3D side32 = new Triangle3D(p2n1.asPoint3D(), p1n2.asPoint3D(), p2n2.asPoint3D());
+				Triangle3D side21 = new Triangle3D(p3n1.asPoint3D(), p2n1.asPoint3D(), p2n2.asPoint3D());
+				Triangle3D side22 = new Triangle3D(p3n1.asPoint3D(), p2n2.asPoint3D(), p3n2.asPoint3D());
+				Triangle3D side31 = new Triangle3D(p1n1.asPoint3D(), p3n1.asPoint3D(), p3n2.asPoint3D());
+				Triangle3D side32 = new Triangle3D(p1n1.asPoint3D(), p3n2.asPoint3D(), p1n2.asPoint3D());
 				Triangle3D bottom = new Triangle3D(p1n2.asPoint3D(), p3n2.asPoint3D(), p2n2.asPoint3D());
 
 				top.draw(gl);
