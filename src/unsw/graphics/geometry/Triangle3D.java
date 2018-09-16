@@ -32,6 +32,10 @@ public class Triangle3D {
         this.points = points;
     }
 
+    public Triangle3D(Point3D p0, Point3D p1, Point3D p2) {
+        this(p0.getX(), p0.getY(), p0.getZ(), p1.getX(), p1.getY(), p1.getZ(), p2.getX(), p2.getY(), p2.getZ());
+    }
+
     public void draw(GL3 gl, CoordFrame3D frame) {        
         Point3DBuffer buffer = new Point3DBuffer(points);
 
