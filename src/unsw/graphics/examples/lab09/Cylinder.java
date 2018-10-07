@@ -77,19 +77,19 @@ public class Cylinder extends FreelookApplication3D {
 
 		ArrayList<Point3D> cylinderVertices = new ArrayList<>();
 		ArrayList<Integer> cylinderIndicies = new ArrayList<>();
-		ArrayList<Point2D> cylinderTexture = new ArrayList<>();
+		ArrayList<Point2D> cylinderTextureCoords = new ArrayList<>();
 
 		// Add the centres.
 		cylinderVertices.add(new Point3D(0.0f, 0.0f, 0.0f));
-		cylinderTexture.add(new Point2D(0.0f, 0.0f));
+		cylinderTextureCoords.add(new Point2D(0.5f, 0.5f));
 		cylinderVertices.add(new Point3D(0.0f, 0.0f, -1.0f));
-		cylinderTexture.add(new Point2D(0.0f, 1.0f));
+		cylinderTextureCoords.add(new Point2D(0.5f, 0.5f));
 
 		// Add all the other points.
 		for (float z = 0.0f; z >= -1.0f; z -= 1.0f) {
 			for (int i = 0; i < NUM_SLICES; ++i) {
 				cylinderVertices.add(new Point3D((float) Math.cos(Math.toRadians(i * 360.0f / NUM_SLICES)), (float) Math.sin(Math.toRadians(i * 360.0f / NUM_SLICES)), z));
-				cylinderTexture.add(new Point2D((float)i / NUM_SLICES, -z));
+				cylinderTextureCoords.add(new Point2D((float)i / NUM_SLICES, -z * 3));
 			}
 		}
 
@@ -113,7 +113,7 @@ public class Cylinder extends FreelookApplication3D {
 			cylinderIndicies.add(2 + NUM_SLICES + i);
 		}
 
-		mesh = new TriangleMesh(cylinderVertices, cylinderIndicies, true, cylinderTexture);
+		mesh = new TriangleMesh(cylinderVertices, cylinderIndicies, true, cylinderTextureCoords);
 		mesh.init(gl);
 	}
 
@@ -124,10 +124,10 @@ public class Cylinder extends FreelookApplication3D {
 		//gl.glPolygonMode(GL3.GL_FRONT_AND_BACK, GL3.GL_LINE);
 		gl.glActiveTexture(GL3.GL_TEXTURE0);
 		gl.glBindTexture(GL3.GL_TEXTURE_2D, texture.getId());
-		Shader.setPenColor(gl, Color.LIGHT_GRAY);
+		Shader.setPenColor(gl, Color.GRAY);
 
-		gl.glTexParameteri(GL3.GL_TEXTURE_2D, GL3.GL_TEXTURE_WRAP_S, GL3.GL_REPEAT);
-		gl.glTexParameteri(GL3.GL_TEXTURE_2D, GL3.GL_TEXTURE_WRAP_T, GL3.GL_REPEAT);
+		gl.glTexParameteri(GL3.GL_TEXTURE_2D, GL3.GL_TEXTURE_WRAP_S, GL3.GL_CLAMP_TO_EDGE);
+		gl.glTexParameteri(GL3.GL_TEXTURE_2D, GL3.GL_TEXTURE_WRAP_T, GL3.GL_CLAMP_TO_EDGE);
 
 		if (lastSliceCount != NUM_SLICES) {
 			updateSliceCount(gl, NUM_SLICES);
@@ -135,6 +135,6 @@ public class Cylinder extends FreelookApplication3D {
 
 		//CoordFrame3D.identity().draw(gl);
 
-		mesh.draw(gl, CoordFrame3D.identity());
+		mesh.draw(gl, CoordFrame3D.identity().scale(1.0f, 1.0f, 3.0f));
 	}
 }
